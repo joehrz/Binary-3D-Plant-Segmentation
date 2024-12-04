@@ -1,0 +1,35 @@
+# configs/default_config.yaml
+
+data:
+  raw:
+    plant_only_dir: 'data/raw/plant_only'
+    plant_only_noisy_dir: 'data/raw/plant_only_noisy'
+    combined_dir: 'data/raw/combined'
+  processed:
+    plant_only_dir: 'data/processed/plant_only'
+    plant_only_noisy_dir: 'data/processed/plant_only_noisy'
+    splits:
+      train_dir: 'data/processed/splits/train'
+      val_dir: 'data/processed/splits/val'
+      test_dir: 'data/processed/splits/test'
+  split_ratios: [0.7, 0.15, 0.15]
+
+preprocessing:
+  noise_params:
+    mean: 0.0
+    std: 0.02
+  voxel_size: 0.02
+  num_points: 2048
+
+training:
+  batch_size: 16
+  num_epochs: 50
+  learning_rate: 0.001
+  scheduler_step_size: 20
+  scheduler_gamma: 0.5
+  num_classes: 2
+
+model:
+  num_points: 2048
+  save_dir: 'models/checkpoints'
+

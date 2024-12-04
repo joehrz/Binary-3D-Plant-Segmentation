@@ -1,0 +1,44 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Data files
+/data/raw/
+/data/processed/
+/data/features/
+/data/**/*.npy
+/data/**/*.npz
+
+# Models
+/models/
+*.h5
+*.pth
+*.pkl
+
+# Logs
+/logs/
+
+# Notebooks checkpoints
+.ipynb_checkpoints
+
+# Environment files
+venv/
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook temporary files
+*/.ipynb_checkpoints
+
+# Ignore large files
+*.ply
+*.pcd
+
+# Visual Studio Code settings
+.vscode/
+
+# MacOS specific
+.DS_Store

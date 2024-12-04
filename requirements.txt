@@ -1,0 +1,11 @@
+numpy
+scipy
+torch
+torchvision
+torchaudio
+pointnet2
+open3d
+matplotlib
+scikit-learn
+PyYAML
+tqdm
