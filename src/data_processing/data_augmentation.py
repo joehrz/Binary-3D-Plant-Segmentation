@@ -121,7 +121,7 @@ def process_point_clouds(
             colors = np.asarray(pcd.colors) if pcd.has_colors() else None
 
             # Add random noise points
-            combined_points, combined_colors = add_random_noise_points(
+            combined_points, combined_colors, _ = add_random_noise_points(
                 points,
                 colors,
                 **noise_params  # Pass the parameters as keyword arguments

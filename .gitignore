@@ -43,3 +43,6 @@ Thumbs.db
 
 # MacOS specific
 .DS_Store
+
+# Personal textfiles for notes
+notes.txt
