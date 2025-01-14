@@ -37,6 +37,8 @@ def voxel_down_sample_with_indices(pcd: o3d.geometry.PointCloud, voxel_size: flo
     indices = np.array(indices, dtype=int)
 
     return downsampled_pcd, indices
+
+
 def adjust_point_count_with_indices(pcd: o3d.geometry.PointCloud, labels: np.ndarray, num_points: int):
     points = np.asarray(pcd.points)
     colors = np.asarray(pcd.colors)
