@@ -34,14 +34,15 @@ Many real-world agricultural scans contain **millions** of points, with only a s
 
 
 ### Step 2: Manual Fix in Meshlab
-
-    Load any _labeled.ply in Meshlab.
-    Delete or fix incorrectly green-labeled points.
-    Save as <basename>_labeled_plant_only_fixed.ply.
+- **Function**:
+    - Load any _labeled.ply in Meshlab.
+    - Delete or fix incorrectly green-labeled points.
+    - Save as <basename>_labeled_plant_only_fixed.ply.
 
 ### Step 3: Adjust Labels
 
 - **Script**: src/scripts/adjust_labels.py
+- **Function**:
     - Compares Meshlab edits to the original labeled data.
     - Points removed in Meshlab => label=0 (red).
     - (Optional) Also flips mislabeled red=>green if there is _labeled_nonplant_only_fixed.ply.
@@ -51,8 +52,11 @@ Many real-world agricultural scans contain **millions** of points, with only a s
     python src/main.py --adjust_labels --config src/configs/default_config.yaml
 
 ### Step 4: Preprocess (Downsample + Normalize)
-- **Function**: src/data_processing/data_preprocessing.py
-- **Reads**: final labeled .npz from data/manually_adjustments/, reduces points to e.g. 4096, normalizes, saves to data/processed/.
+- **Script**: src/data_processing/data_preprocessing.py
+- **Function**: 
+    - Final labeled .npz from data/manually_adjustments/ 
+    - Reduces points to e.g. 4096,
+    - Normalizes, saves to data/processed/.
 
 
     ```bash
@@ -61,8 +65,10 @@ Many real-world agricultural scans contain **millions** of points, with only a s
 ### Step 6: Training
 
 - **Script**: src/training/train.py
-    Uses PointNet++ (or any 3D segmentation model) with num_classes=2 for binary segmentation.
-    Trains on the train/val splits, saves best model.
+- **Function**: 
+    - Uses PointNet++ (or any 3D segmentation model) with num_classes=2 for binary segmentation.
+    - Trains on the train/val splits
+    - Saves best model.
     
     ```bash
     python src/main.py --train --config src/configs/default_config.yaml
@@ -71,7 +77,10 @@ Many real-world agricultural scans contain **millions** of points, with only a s
 ### Step 7: Evaluation
 
 - **Script**: src/training/evaluate.py
-    Loads the best model, runs on test set, prints metrics (precision, recall, F1, IoU).
+
+- **Function**: 
+    - Loads the best model, runs on test set,
+    - prints metrics (precision, recall, F1, IoU).
     
     ```bash
     python src/main.py --evaluate --config src/config/default_config.yaml
