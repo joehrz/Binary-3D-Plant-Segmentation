@@ -42,9 +42,9 @@ Many real-world agricultural scans contain **millions** of points, with only a s
 ### Step 3: Adjust Labels
 
 - **Script**: src/scripts/adjust_labels.py
-    Compares Meshlab edits to the original labeled data.
-    Points removed in Meshlab => label=0 (red).
-    (Optional) Also flips mislabeled red=>green if there is _labeled_nonplant_only_fixed.ply.
+    - Compares Meshlab edits to the original labeled data.
+    - Points removed in Meshlab => label=0 (red).
+    - (Optional) Also flips mislabeled red=>green if there is _labeled_nonplant_only_fixed.ply.
     
     
     ```bash
@@ -83,21 +83,21 @@ All major parameters (paths, DBSCAN eps, training hyperparams) are in:
     ```bash
     src/configs/default_config.yaml
 
-data:
-  raw_dir: "data/raw"
-  manual_dir: "data/manually_adjustments"
-  processed_dir: "data/processed"
-  split_ratios: [0.7, 0.15, 0.15]
+    data:
+        raw_dir: "data/raw"
+        manual_dir: "data/manually_adjustments"
+        processed_dir: "data/processed"
+        split_ratios: [0.7, 0.15, 0.15]
 
-preprocessing:
-  voxel_size: 0.02
-  num_points: 4096
+    preprocessing:
+        voxel_size: 0.02
+        num_points: 4096
 
-training:
-  batch_size: 16
-  num_epochs: 50
-  learning_rate: 0.001
-  ...
+    training:
+        batch_size: 16
+        num_epochs: 50
+        learning_rate: 0.001
+    ...
 
 ## 4. Installation & Dependencies
 
@@ -110,6 +110,6 @@ training:
 
 ## 5. Advanced Notes
 
-ExG + DBSCAN is a heuristic. Tweak thresholds if color-based detection is inaccurate.
-Manual Fix in Meshlab primarily corrects false positives (green). Optionally fix false negatives with _labeled_nonplant_only_fixed.ply.
-Normalization & Downsampling ensures consistent input sizes for the neural net.
+- ExG + DBSCAN is a heuristic. Tweak thresholds if color-based detection is inaccurate.
+- Manual Fix in Meshlab primarily corrects false positives (green). Optionally fix false negatives with _labeled_nonplant_only_fixed.ply.
+- Normalization & Downsampling ensures consistent input sizes for the neural net.
