@@ -10,7 +10,6 @@ Many real-world agricultural scans contain **millions** of points, with only a s
 
 - **Simplifies** the problem to just two classes: plant (1) vs. non-plant (0).  
 - **Enhances** subsequent analysis (e.g., measuring plant geometry or extracting morphological traits) by removing background clutter.  
-- **Scalable** for large farmland or greenhouse point clouds with complex backgrounds.
 
 ## 2. Pipeline Overview
 
@@ -104,14 +103,13 @@ training:
 
     Python 3.7+ recommended
     PyTorch (for training)
-    Other libraries: numpy, open3d, scikit-learn, scipy, etc.
-
-Install via
+    Other libraries: numpy, open3d, scikit-learn, scipy.
+    
     ```bash
     pip install -r requirements.txt
 
 ## 5. Advanced Notes
 
-    ExG + DBSCAN is a heuristic. Tweak thresholds if color-based detection is inaccurate.
-    Manual Fix in Meshlab primarily corrects false positives (green). Optionally fix false negatives with _labeled_nonplant_only_fixed.ply.
-    Normalization & Downsampling ensures consistent input sizes for the neural net.
+ExG + DBSCAN is a heuristic. Tweak thresholds if color-based detection is inaccurate.
+Manual Fix in Meshlab primarily corrects false positives (green). Optionally fix false negatives with _labeled_nonplant_only_fixed.ply.
+Normalization & Downsampling ensures consistent input sizes for the neural net.
