@@ -11,9 +11,6 @@ data:
   split_ratios: [0.7, 0.15, 0.15]
 
 preprocessing:
-  noise_params:
-    mean: 0.0
-    std: 0.02
   voxel_size: 0.02
   num_points: 2048
 
