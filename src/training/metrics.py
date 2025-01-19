@@ -92,13 +92,13 @@ def calculate_metrics(
             # --------------------------------
             # Here we treat "1" as the positive (plant) class.
 
-            tp = ((preds == 1) & (labels == 1).sum().item())
-            fp = ((preds == 1) & (labels == 0).sum().item())
-            fn = ((preds == 0) & (labels == 1).sum().item())
+            tp_batch = ((preds == 1) & (labels == 1)).sum().item()
+            fp_batch = ((preds == 1) & (labels == 0)).sum().item()
+            fn_batch = ((preds == 0) & (labels == 1)).sum().item()
 
-            true_positive += tp
-            false_positive += fp
-            false_negative += fn
+            true_positive += tp_batch
+            false_positive += fp_batch
+            false_negative += fn_batch
 
 
             # --------------------------------
