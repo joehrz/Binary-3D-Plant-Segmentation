@@ -85,7 +85,8 @@ def main():
             input_dir=config.data.manual_dir,   # e.g. "data/manually_adjustments"
             output_dir=config.data.processed_dir,  # e.g. "data/processed"
             voxel_size=0.02,
-            num_points=4096
+            num_points=4096,
+            file_ext="_final.npz"
         )
         logger.info("Data preprocessing completed.")
 
