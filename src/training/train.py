@@ -1,6 +1,7 @@
 # src/training/train.py
 
 import os
+import glob
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -51,13 +52,21 @@ def train_model(config: Config) -> None:
     # -----------------------------
     # 2. Dataset & DataLoader
     # -----------------------------
+    # Collect actual file paths
+    train_dir = config.data.splits.train_dir
+    val_dir   = config.data.splits.val_dir
+
+    train_files = sorted(glob.glob(os.path.join(train_dir, "*.npz")))
+    val_files   = sorted(glob.glob(os.path.join(val_dir, "*.npz")))
+
     train_dataset = MixedPointCloudDataset(
-        config.data.processed.splits.train_dir,
+        train_files,
         num_points=config.model.num_points
     )
 
+
     val_dataset = MixedPointCloudDataset(
-        config.data.processed.splits.val_dir,
+        val_files,
         num_points=config.model.num_points
     )
 
