@@ -20,7 +20,7 @@ def split_dataset(input_dir: str, output_dir: str, split_ratios: Tuple[float, fl
     assert sum(split_ratios) == 1.0, "Split ratios must sum to 1."
     random.seed(seed)
 
-    files = [f for f in os.listdir(input_dir) if f.endswith('.ply')]
+    files = [f for f in os.listdir(input_dir) if f.endswith('.npz')]
     random.shuffle(files)
 
     train_end = int(split_ratios[0] * len(files))
@@ -41,7 +41,7 @@ def split_dataset(input_dir: str, output_dir: str, split_ratios: Tuple[float, fl
 
 
 if __name__ == '__main__':
-    input_directory = 'data/processed/plant_only_noisy'
+    input_directory = 'data/processed'
     output_directory = 'data/processed/splits'
     split_ratios = (0.7, 0.15, 0.15)
 
