@@ -13,6 +13,9 @@ data:
 preprocessing:
   voxel_size: 0.02
   num_points: 2048
+  noise_params:
+    mean: 0.0
+    std: 0.02
 
 training:
   batch_size: 2
