@@ -95,7 +95,7 @@ def main():
         logger.info("Starting dataset splitting...")
         # If you want to split the final preprocessed data:
         input_dir = config.data.processed_dir
-        output_dir = os.path.join(config.data.processed_dir, "splits")
+        output_dir = config.data.splits_dir
         split_ratios = tuple(config.data.split_ratios)
 
         split_dataset(input_dir, output_dir, split_ratios)
