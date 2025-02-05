@@ -1,8 +1,8 @@
-# Wheat-Point-Cloud-Binary-Segmentation
+# Point-Cloud-Binary-Segmentation
 
 > **Note**: This project is still a **work in progress**.
 
-A **binary semantic segmentation** pipeline that filters **plant** vs. **non-plant** points in 3D wheat point clouds. We treat “plant” as class 1 and “non-plant” as class 0, effectively learning to segment plant structures from soil, background, or other artifacts.
+A **binary semantic segmentation** pipeline that filters **plant** vs. **non-plant** points in 3D plant point clouds. We treat “plant” as class 1 and “non-plant” as class 0, effectively learning to segment plant structures from soil, background, or other artifacts.
 
 ## 1. Introduction
 
