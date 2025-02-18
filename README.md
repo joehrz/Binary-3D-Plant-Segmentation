@@ -1,12 +1,12 @@
-# Wheat-Point-Cloud-Binary-Segmentation
+# Point-Cloud-Binary-Segmentation
 
 > **Note**: This project is still a **work in progress**.
 
-A **binary semantic segmentation** pipeline that filters **plant** vs. **non-plant** points in 3D wheat point clouds. We treat “plant” as class 1 and “non-plant” as class 0, effectively learning to segment plant structures from soil, background, or other artifacts.
+A **binary semantic segmentation** pipeline that filters **plant** vs. **non-plant** points in 3D plant point clouds. We treat “plant” as class 1 and “non-plant” as class 0, effectively learning to segment plant structures from soil, background, or other artifacts.
 
 ## 1. Introduction
 
-Many real-world agricultural scans contain **millions** of points, with only a subset representing the actual **plant** structures. This project provides a **streamlined** pipeline to **automatically** label plant vs. non-plant points (binary semantic segmentation), **manually correct** mistakes, **downsample/normalize** the data for neural network input, and **train** a deep learning model (e.g., PointNet++). Ultimately, you obtain a robust classifier to handle new 3D point clouds, filtering out non-plant regions.
+Many real-world agricultural scans contain **millions** of points, with only a subset representing the actual **plant** structures. This project provides a **streamlined** pipeline to **automatically** label plant vs. non-plant points (binary semantic segmentation), **manually correct** mistakes, **downsample/normalize** the data for neural network input, and **train** a deep learning model (e.g., PointNet++).
 
 ### Why Binary Semantic Segmentation?
 
