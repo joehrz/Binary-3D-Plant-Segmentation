@@ -13,14 +13,12 @@ sys.path.append(project_root)
 
 from src.utils.logger import setup_logger
 from src.data_processing.data_augmentation import preprocess_point_clouds
-#from src.data_processing.data_preprocessing import preprocess_point_clouds
 from src.data_processing.dataset_splitting import split_dataset
 from src.training.train import train_model
 from src.training.evaluate import evaluate_model
 from src.configs.config import Config
 
 from src.scripts.batch_threshold_dbscan import batch_threshold_dbscan
-#from src.scripts.adjust_labels import adjust_labels_after_meshlab
 from src.scripts.adjust_labels import batch_adjust_labels
 
 def main():
