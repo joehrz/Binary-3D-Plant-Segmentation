@@ -81,13 +81,10 @@ Below are some **non-final** yet promising outcomes demonstrating our model’s 
 1. **Training Curve**  
    ![Training Curve](docs/images/training_curve.png)
 
+2. **Sample Segmentation (Side by Side)**  
+   ![Training Curve](docs/images/combined_visual.png)
 
-## Sample Segmentation (Side by Side)
 
-<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
-  <img src="docs/images/plantandnonplant.png" style="width: 400px;" alt="Plant Points">
-  <img src="docs/images/plantandnonplantsegmentation.png" style="width: 400px;" alt="Model Segmentation">
-</div>
 
 ## 5. Test Metrics
 
