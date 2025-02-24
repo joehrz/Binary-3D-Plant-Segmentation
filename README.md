@@ -93,9 +93,10 @@ The wheat data is not publicly available at this time. We plan to share more inf
 
 ## 6. Intermediate Results
 
-Below are some **non-final** yet promising outcomes demonstrating our model’s steady improvement:
+2. **Full Wheat Point Cloud Data**  
+   ![Sample Full Wheat](docs/images/combined_visual.png)
 
-1. **Wheat Sample Segmentation (Side by Side)**  
+2. **Wheat Sample Segmentation (Side by Side)**  
    ![Sample Segmentation](docs/images/combined_visual.png)
 
 
