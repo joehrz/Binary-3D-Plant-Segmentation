@@ -74,19 +74,36 @@ All major parameters (paths, DBSCAN eps, training hyperparams) are in:
     ```bash
     pip install -r requirements.txt
 
-## 4. Intermediate Results
+
+## 4. Synthetic Dataset
+
+We utilize the **Sorghum Plants Labeled 3D LiDAR Point Cloud Data** provided by [Patel et al. (2023)](https://data.mendeley.com/datasets/pfnfzrmrg7/1). This dataset contains labeled sorghum plant scans.
+
+> **Citation**:  
+> Patel, Ajay Kumar; Cho, Byoung-Kwan; Park, Eun-Sung (2023),  
+> “Sorghum Plants Labeled 3D LiDAR Point Cloud Data”,  
+> *Mendeley Data*, V1, doi: [10.17632/pfnfzrmrg7.1](https://doi.org/10.17632/pfnfzrmrg7.1)
+
+We further extend and **augment** these real scans with **synthetic data**, adding pots, soil, and background noise to improve model robustness. An example synthetic plant vs. non-plant scene is shown below:
+
+![Sample Synthetic Plant](docs/images/Synthetic_Plant_Non_Plant.png)
+
+## 5. Wheat Dataset
+The wheat data is not publicly available at this time. We plan to share more information in the future.
+
+## 6. Intermediate Results
 
 Below are some **non-final** yet promising outcomes demonstrating our model’s steady improvement:
 
 1. **Training Curve**  
    ![Training Curve](docs/images/training_curve.png)
 
-2. **Sample Segmentation (Side by Side)**  
+2. **Wheat Sample Segmentation (Side by Side)**  
    ![Sample Segmentation](docs/images/combined_visual.png)
 
 
 
-## 5. Test Metrics
+## 7. Test Metrics
 
 A recent run on the real dataset test set yielded:
 
@@ -97,7 +114,7 @@ A recent run on the real dataset test set yielded:
 | **F1-Score**  | 0.8264  |
 | **IoU**       | 0.7042  |
 
-## 5. Next Steps / TODO
+## 8. Next Steps / TODO
 - **Add More Data**:
     - The dataset is small, limiting IoU to ~70%. More real scans = improved generalization.
 - **Refine Training Quality**:
