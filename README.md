@@ -81,10 +81,13 @@ Below are some **non-final** yet promising outcomes demonstrating our model’s 
 1. **Training Curve**  
    ![Training Curve](docs/images/training_curve.png)
 
-   *Loss decreases and IoU rises as epochs progress, indicating we’re on track.*
 
-2. **Sample Segmentation**  
-   ![Sample Segmentation](docs/images/plantandnonplantsegmentation.png)
+## Sample Segmentation (Side by Side)
+
+<div align="center">
+  <img src="docs/images/plantandnonplant.png" width="45%" alt="Plant Points"/>
+  <img src="docs/images/plantandnonplantsegmentation.png" width="45%" alt="Model Segmentation"/>
+</div>
 
 ## 5. Test Metrics
 
