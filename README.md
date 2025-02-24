@@ -41,72 +41,8 @@ A **binary semantic segmentation** pipeline that filters **plant** vs. **non-pla
 
 ---
 
-## 2. Core Steps
 
-### Step 1: Batch Process (ExG + Otsu Threshold + DBSCAN)
-
-- **Script**: `src/scripts/batch_threshold_dbscan.py`  
-- **Input**: `.ply` files in `data/raw/`.  
-- **Output**: `_labeled.ply` and `.npz` files in `data/manually_adjustments/`, with plant=green, non-plant=red.
-
-
-    ```bash
-    python src/main.py --batch_process
-
-
-### Step 2: Manual Fix in Meshlab
-- **Function**:
-    - Load any _labeled.ply in Meshlab.
-    - Delete or fix incorrectly green-labeled points.
-    - Save as <basename>_labeled_plant_only_fixed.ply.
-
-### Step 3: Adjust Labels
-
-- **Script**: src/scripts/adjust_labels.py
-- **Function**:
-    - Compares Meshlab edits to the original labeled data.
-    - Points removed in Meshlab => label=0 (red).
-    - (Optional) Also flips mislabeled red=>green if there is _labeled_nonplant_only_fixed.ply.
-    
-    
-    ```bash
-    python src/main.py --adjust_labels --config src/configs/default_config.yaml
-
-### Step 4: Preprocess (Downsample + Normalize)
-- **Script**: src/data_processing/data_preprocessing.py
-- **Function**: 
-    - Final labeled .npz from data/manually_adjustments/ 
-    - Reduces points to e.g. 4096,
-    - Normalizes, saves to data/processed/.
-
-
-    ```bash
-    python src/main.py --preprocess --config src/configs/default_config.yaml
-
-### Step 6: Training
-
-- **Script**: src/training/train.py
-- **Function**: 
-    - Uses PointNet++ with num_classes=2 for binary segmentation.
-    - Trains on the train/val splits
-    - Saves best model.
-    
-    ```bash
-    python src/main.py --train --config src/configs/default_config.yaml
-
-
-### Step 7: Evaluation
-
-- **Script**: src/training/evaluate.py
-
-- **Function**: 
-    - Loads the best model, runs on test set,
-    - prints metrics (precision, recall, F1, IoU).
-    
-    ```bash
-    python src/main.py --evaluate --config src/config/default_config.yaml
-
-## 3. Configuration
+## 2. Configuration
 
 All major parameters (paths, DBSCAN eps, training hyperparams) are in:
     
@@ -129,7 +65,7 @@ All major parameters (paths, DBSCAN eps, training hyperparams) are in:
         learning_rate: 0.001
     ...
 
-## 4. Installation & Dependencies
+## 3. Installation & Dependencies
 
     Python 3.7+ recommended
     PyTorch (for training)
@@ -138,7 +74,7 @@ All major parameters (paths, DBSCAN eps, training hyperparams) are in:
     ```bash
     pip install -r requirements.txt
 
-## 5. Intermediate Results
+## 4. Intermediate Results
 
 Below are some **non-final** yet promising outcomes demonstrating our model’s steady improvement:
 
@@ -153,15 +89,8 @@ Below are some **non-final** yet promising outcomes demonstrating our model’s 
    </div>
 
 
-3. **Metrics by Checkpoint**  
-| Checkpoint | Epoch | Val IoU  | Notes                     |
-|-----------|-------|----------|---------------------------|
-| v1        | 10    | 0.52     | basic initial training    |
-| v2        | 15    | 0.62     | introduced augmentation   |
-| v3        | 20    | 0.68     | refined synthetic gen, etc|
 
-
-## 6. Next Steps / TODO
+## 5. Next Steps / TODO
 - **Add More Data**:
     - The dataset is small, limiting IoU to ~70%. More real scans = improved generalization.
 - **Refine Training Quality**:
