@@ -82,7 +82,7 @@ Below are some **non-final** yet promising outcomes demonstrating our model’s 
    ![Training Curve](docs/images/training_curve.png)
 
 2. **Sample Segmentation (Side by Side)**  
-   ![Training Curve](docs/images/combined_visual.png)
+   ![Sample Segmentation](docs/images/combined_visual.png)
 
 
 
