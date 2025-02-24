@@ -95,10 +95,7 @@ The wheat data is not publicly available at this time. We plan to share more inf
 
 Below are some **non-final** yet promising outcomes demonstrating our model’s steady improvement:
 
-1. **Training Curve**  
-   ![Training Curve](docs/images/training_curve.png)
-
-2. **Wheat Sample Segmentation (Side by Side)**  
+1. **Wheat Sample Segmentation (Side by Side)**  
    ![Sample Segmentation](docs/images/combined_visual.png)
 
 
