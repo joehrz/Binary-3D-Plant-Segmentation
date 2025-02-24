@@ -86,7 +86,16 @@ Below are some **non-final** yet promising outcomes demonstrating our model’s 
 2. **Sample Segmentation**  
    ![Sample Segmentation](docs/images/plantandnonplantsegmentation.png)
 
+## 5. Test Metrics
 
+A recent run on the real dataset test set yielded:
+
+| Metric        |   Value |
+|---------------|--------:|
+| **Precision** | 0.7637  |
+| **Recall**    | 0.9004  |
+| **F1-Score**  | 0.8264  |
+| **IoU**       | 0.7042  |
 
 ## 5. Next Steps / TODO
 - **Add More Data**:
