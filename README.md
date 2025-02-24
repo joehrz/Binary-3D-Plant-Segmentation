@@ -84,9 +84,7 @@ Below are some **non-final** yet promising outcomes demonstrating our model’s 
    *Loss decreases and IoU rises as epochs progress, indicating we’re on track.*
 
 2. **Sample Segmentation**  
-   <div align="center">
-   <img src="docs/images/plantandnonplantsegmentation.png" width="45%" alt="Segmented Cloud"/>
-   </div>
+   ![Sample Segmentation](docs/images/plantandnonplantsegmentation.png)
 
 
 
