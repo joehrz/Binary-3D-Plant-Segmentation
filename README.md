@@ -84,9 +84,9 @@ Below are some **non-final** yet promising outcomes demonstrating our model’s 
 
 ## Sample Segmentation (Side by Side)
 
-<div align="center">
-  <img src="docs/images/plantandnonplant.png" width="60%" alt="Plant Points"/>
-  <img src="docs/images/plantandnonplantsegmentation.png" width="60%" alt="Model Segmentation"/>
+<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+  <img src="docs/images/plantandnonplant.png" style="width: 400px;" alt="Plant Points">
+  <img src="docs/images/plantandnonplantsegmentation.png" style="width: 400px;" alt="Model Segmentation">
 </div>
 
 ## 5. Test Metrics
