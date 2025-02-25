@@ -3,79 +3,103 @@
 import os
 import glob
 import torch
+import numpy as np
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-
+import matplotlib.pyplot as plt
 
 from src.models.pointnetplusplus import PointNetPlusPlus
 from src.datasets.mixed_pointcloud_dataset import MixedPointCloudDataset
+from src.datasets.augmented_dataset_wrapper import AugmentedDatasetWrapper
 from src.training.metrics import calculate_iou
 from src.configs.config import Config
+
+
+def plot_training_curve(train_losses, val_ious, out_path="training_curve.png"):
+    """
+    Saves a plot of training loss and validation IoU over epochs to out_path.
+    """
+    epochs = range(1, len(train_losses) + 1)
+
+    plt.figure(figsize=(8, 5))
+    # Plot training loss
+    plt.plot(epochs, train_losses, label='Train Loss', color='red')
+    # Plot validation IoU
+    plt.plot(epochs, val_ious, label='Val IoU', color='blue')
+
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss / IoU")
+    plt.title("Training Curve: Loss and Val IoU")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+
+    plt.savefig(out_path)
+    plt.close()
+    print(f"[INFO] Training curve saved to {out_path}")
+
 
 def train_model(config: Config) -> None:
     """
     Trains the segmentation model using PointNet++.
-
-    Steps:
-        1) Load train & validation datasets into Dataloaders.
-        2) Initialize PointNet++ model, optimizer, and learning rate scheduler.
-        3) For each epoch:
-             - Train the model on the entire training set.
-             - Evaluate on the validation set (IoU).
-             - Update best model if current val IoU is higher.
-
-    Optional enhancements:
-        - Log training IoU per epoch (requires an additional function call).
-        - Early stopping if val IoU does not improve for X consecutive epochs.
-        - Gradient clipping to avoid exploding gradients.
-
-    Args:
-        config (Config): Configuration object with training parameters, e.g.:
-            config.data.processed.splits.train_dir
-            config.data.processed.splits.val_dir
-            config.model.num_points
-            config.training.num_epochs
-            config.training.batch_size
-            config.training.learning_rate
-            config.training.num_classes
-            config.training.scheduler_step_size
-            config.training.scheduler_gamma
-            config.model.save_dir
+    Adds a unique name to the saved checkpoint file so it doesn't overwrite
+    other training runs (e.g. synthetic vs. real datasets).
     """
-    # -----------------------------
-    # 1. Device configuration
-    # -----------------------------
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"[INFO] Training on device: {device}")
 
     # -----------------------------
-    # 2. Dataset & DataLoader
+    # 1. Prepare file lists for train/val
     # -----------------------------
-    # Collect actual file paths
     train_dir = config.data.splits.train_dir
     val_dir   = config.data.splits.val_dir
 
     train_files = sorted(glob.glob(os.path.join(train_dir, "*.npz")))
     val_files   = sorted(glob.glob(os.path.join(val_dir, "*.npz")))
 
-    train_dataset = MixedPointCloudDataset(
-        train_files,
+    # We'll extract a short name from train_dir to include in the checkpoint filename.
+    # For instance, if train_dir="data/synthetic_proc/splits/train", we might use just "train".
+    train_dir_name = os.path.basename(os.path.normpath(train_dir))  # e.g. "train"
+
+    # -----------------------------
+    # 2. Base dataset objects
+    # -----------------------------
+    base_train_dataset = MixedPointCloudDataset(
+        file_list=train_files,
+        num_points=config.model.num_points
+    )
+    base_val_dataset = MixedPointCloudDataset(
+        file_list=val_files,
         num_points=config.model.num_points
     )
 
+    # Optionally apply augmentation for train
+    augment_train = getattr(config.training, "augment_train", True)
+    if augment_train:
+        train_dataset = AugmentedDatasetWrapper(
+            base_dataset=base_train_dataset,
+            augment=True,
+            rotate_range=(-np.pi, np.pi),
+            flip_prob=0.5,
+            scale_range=(0.9, 1.1),
+            partial_dropout_prob=0.3
+        )
+        print("[INFO] On-the-fly augmentation is enabled for TRAIN dataset.")
+    else:
+        train_dataset = base_train_dataset
 
-    val_dataset = MixedPointCloudDataset(
-        val_files,
-        num_points=config.model.num_points
-    )
+    val_dataset = base_val_dataset
 
+    # -----------------------------
+    # 3. Create DataLoaders
+    # -----------------------------
     train_loader = DataLoader(
         train_dataset,
         batch_size=config.training.batch_size,
         shuffle=True,
-        num_workers=4,     # Adjust based on system
-        pin_memory=True    # Potential speedup if enough RAM
+        num_workers=4,
+        pin_memory=True
     )
     val_loader = DataLoader(
         val_dataset,
@@ -84,102 +108,105 @@ def train_model(config: Config) -> None:
         num_workers=4,
         pin_memory=True
     )
+
     print(f"[INFO] Loaded {len(train_dataset)} training samples, "
           f"{len(val_dataset)} validation samples.")
-    
+
     # -----------------------------
-    # 3. Model, Loss, Optimizer
+    # 4. Build model
     # -----------------------------
     model = PointNetPlusPlus(num_classes=config.training.num_classes).to(device)
 
-    criterion = nn.NLLLoss()  # or nn.CrossEntropyLoss if you remove log_softmax in model
-    optimizer = optim.Adam(
-        model.parameters(),
-        lr=config.training.learning_rate
-    )
+    # Optionally load checkpoint
+    resume_ckpt = getattr(config.training, "resume_checkpoint", None)
+    if resume_ckpt and os.path.exists(resume_ckpt):
+        print(f"[INFO] Loading pre-trained weights from {resume_ckpt}")
+        model.load_state_dict(torch.load(resume_ckpt, map_location=device))
 
+    # -----------------------------
+    # 5. Loss/optimizer
+    # -----------------------------
+    criterion = nn.NLLLoss()  # or nn.CrossEntropyLoss if removing log_softmax in model
+    optimizer = optim.Adam(model.parameters(), lr=config.training.learning_rate)
     scheduler = optim.lr_scheduler.StepLR(
         optimizer,
         step_size=config.training.scheduler_step_size,
         gamma=config.training.scheduler_gamma
     )
-  
-    
+
     # -----------------------------
-    # 4. Training loop
+    # 6. Training loop + logging
     # -----------------------------
     best_iou = 0.0
     best_epoch = 0
-    no_improve_epochs = 0     # For optional early stopping
-    patience = 10             # Stop if val iou doesn't improve for X epochs
+    no_improve_epochs = 0
+    patience = 10
+
+    train_loss_history = []
+    val_iou_history = []
 
     for epoch in range(config.training.num_epochs):
-        # ---- Training ----
         model.train()
         running_loss = 0.0
-        # Optionally track training IoU
-        # train_iou_running = 0.0
 
         for batch_idx, (points, labels) in enumerate(train_loader):
-            points = points.to(device)   # shape: (B, N, 3)
-            labels = labels.to(device)   # shape: (B, N)
+            points, labels = points.to(device), labels.to(device)
 
             optimizer.zero_grad()
-            outputs = model(points)      # shape: (B, N, num_classes)
+            outputs = model(points)  # shape: (B, N, num_classes)
             outputs = outputs.view(-1, config.training.num_classes)
-            labels = labels.view(-1)
+            labels  = labels.view(-1)
 
             loss = criterion(outputs, labels)
             loss.backward()
-
-            # clip_grad_norm_(model.parameters(), max_norm=1.0)  # optional gradient clipping
             optimizer.step()
 
             running_loss += loss.item()
-            # If you want training IoU on the fly:
-            # preds = outputs.argmax(dim=-1)
-            # train_iou_batch = compute_batch_iou(preds, labels, config.training.num_classes)
-            # train_iou_running += train_iou_batch
 
-        # Average training loss
+        # Average training loss for this epoch
         epoch_loss = running_loss / len(train_loader)
-
-        # Optionally, compute average training IoU
-        # train_iou_avg = train_iou_running / len(train_loader)
+        train_loss_history.append(epoch_loss)
 
         scheduler.step()
 
-        # ---- Validation ----
+        # Validation IoU
         model.eval()
         with torch.no_grad():
-            val_iou = calculate_iou(
-                model, val_loader, device, config.training.num_classes
-            )
+            val_iou = calculate_iou(model, val_loader, device, config.training.num_classes)
+
+        val_iou_history.append(val_iou)
 
         print(f"Epoch [{epoch + 1}/{config.training.num_epochs}] "
               f"Train Loss: {epoch_loss:.4f}, "
-              # f"Train IoU: {train_iou_avg:.4f}, "  # if you computed train iou
               f"Val IoU: {val_iou:.4f}")
 
-        # --------------------
-        # 5. Checkpoint
-        # --------------------
+        # Checkpointing
         if val_iou > best_iou:
             best_iou = val_iou
             best_epoch = epoch + 1
+
+            # Instead of always "best_model.pth", incorporate train_dir_name
+            # e.g., "best_model_train.pth"
+            ckpt_name = f"best_model_{train_dir_name}.pth"
             os.makedirs(config.model.save_dir, exist_ok=True)
-            model_save_path = os.path.join(config.model.save_dir, 'best_model.pth')
+            model_save_path = os.path.join(config.model.save_dir, ckpt_name)
+
             torch.save(model.state_dict(), model_save_path)
             print(f"  => New best IoU: {best_iou:.4f}. Model saved to {model_save_path}")
             no_improve_epochs = 0
         else:
             no_improve_epochs += 1
 
-        # --------------------
-        # 6. Early Stopping (Optional)
-        # --------------------
+        # Early Stopping
         if no_improve_epochs >= patience:
             print(f"[Early Stopping] Validation IoU did not improve for {patience} epochs.")
             break
 
     print(f"Training completed. Best IoU: {best_iou:.4f} at epoch {best_epoch}.")
+
+    # -----------------------------
+    # 7. Plot the training curve
+    # -----------------------------
+    out_path = os.path.join(config.model.save_dir, f"training_curve_{train_dir_name}.png")
+    plot_training_curve(train_loss_history, val_iou_history, out_path=out_path)
+
