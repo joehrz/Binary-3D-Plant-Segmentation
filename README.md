@@ -63,7 +63,7 @@ All major parameters (paths, DBSCAN eps, training hyperparams) are in:
         batch_size: 16
         num_epochs: 50
         learning_rate: 0.001
-    ...
+   ```
 
 ## 3. Installation & Dependencies
 
@@ -74,6 +74,7 @@ All major parameters (paths, DBSCAN eps, training hyperparams) are in:
    ```bash
     pip install -r requirements.txt
 
+   ```
 
 ## 4. Synthetic Dataset
 
