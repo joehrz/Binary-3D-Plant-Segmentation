@@ -46,7 +46,7 @@ A **binary semantic segmentation** pipeline that filters **plant** vs. **non-pla
 
 All major parameters (paths, DBSCAN eps, training hyperparams) are in:
     
-    ```bash
+   ```bash
     src/configs/default_config.yaml
 
     data:
@@ -71,7 +71,7 @@ All major parameters (paths, DBSCAN eps, training hyperparams) are in:
     PyTorch (for training)
     Other libraries: numpy, open3d, scikit-learn, scipy.
     
-    ```bash
+   ```bash
     pip install -r requirements.txt
 
 
@@ -93,7 +93,7 @@ The wheat data is not publicly available at this time. We plan to share more inf
 
 ## 6. Intermediate Results
 
-2. **Full Wheat Point Cloud Data**  
+1. **Full Wheat Point Cloud Data**  
    ![Sample Full Wheat](docs/images/full_wheat_point_cloud.png)
 
 2. **Wheat Sample Segmentation (Side by Side)**  
