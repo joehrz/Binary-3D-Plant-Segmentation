@@ -1,4 +1,4 @@
-# Point-Cloud-Binary-Segmentation
+# Binary-3D-Plant-Segmentation
 
 > **Note**: This project is still a **work in progress**.
 
